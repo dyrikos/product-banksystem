@@ -8,7 +8,7 @@ TC-01…TC-29, TC-38…TC-41 — автотести (`ctest`), статус за
 |---|---|---|---|---|---|---|
 | TC-01 | FR-03 | +, М | `12`, `12.5`, `0.01` | `12.00`, `12.50`, `0.01` | `parses_whole_and_cents` | ✅ |
 | TC-02 | NFR-3 | − | `abc`, порожньо | відхилено | `rejects_not_a_number` | ✅ |
-| TC-03 | NFR-1 | −, М | `10.999` | відхилено: копійок лише дві | `rejects_more_than_two_decimals` | ✅ (було 🔴, BUG-03) |
+| TC-03 | NFR-1 | −, М | `10.999` | відхилено: центів лише два знаки | `rejects_more_than_two_decimals` | ✅ (було 🔴, BUG-03) |
 | TC-04 | NFR-3 | − | `100abc` | відхилено | `rejects_trailing_garbage` | ✅ (було 🔴, BUG-03) |
 | TC-05 | NFR-1 | + | `0.10 + 0.20` | рівно `0.30` | `adding_cents_is_exact` | ✅ (було 🔴, BUG-01) |
 

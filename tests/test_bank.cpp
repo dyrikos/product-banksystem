@@ -144,7 +144,7 @@ TEST(open_account_rejects_bad_owner) {
 // --- верхня межа ---
 
 TEST(deposit_above_max_is_invalid) {
-    // дано: 5500.50 на рахунку; оригінал приймав 1e20 і «губив» копійки (BUG-08)
+    // дано: 5500.50 на рахунку; оригінал приймав 1e20 і «губив» центи (BUG-08)
     Bank b = demo();
     Account* acc = b.authenticate("UA1223456789", "1234");
     CHECK(acc && b.deposit(*acc, kMaxAmount) == Result::InvalidAmount);

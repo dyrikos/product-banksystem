@@ -16,7 +16,7 @@ TEST(rejects_not_a_number) {
 }
 
 TEST(rejects_more_than_two_decimals) {
-    // 10.999 — не сума в гривнях: копійок лише дві
+    // 10.999 — не сума в доларах: центів лише два знаки
     CHECK(!parse_money("10.999"));
 }
 

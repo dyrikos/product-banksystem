@@ -26,7 +26,7 @@ sequenceDiagram
     bank-->>cli: рахунок або nullptr
     C->>cli: «2», сума «100.10»
     cli->>money: parse_money("100.10")
-    money-->>cli: 10010 копійок
+    money-->>cli: 10010 центів
     cli->>bank: deposit(рахунок, 10010)
     bank-->>cli: Ok
     cli->>storage: save_accounts(рахунки)
@@ -51,7 +51,7 @@ sequenceDiagram
     else отримувач є
         C->>cli: сума
         cli->>money: parse_money(сума)
-        money-->>cli: копійки
+        money-->>cli: центи
         cli->>bank: transfer(від, номер, сума)
         bank-->>cli: Ok / InsufficientFunds / InvalidAmount
         cli->>storage: save_accounts(рахунки) — лише після Ok

@@ -51,7 +51,7 @@ cli     : bank [місце сховища]                    — спільни
 | `README.md` | що це, як зібрати й запустити, хто автор | збірка й вхід — у перших 10 рядках | ✅ |
 | `.gitignore` | `build/`, `data/`, `*.exe` | `git status` без сміття збірки й без PIN | ✅ |
 | `CONTRIBUTING.md` | коміти, гілки, злиття | пів сторінки | ✅ |
-| ADR | контекст, варіанти, рішення, наслідки | є відкинуті варіанти | ✅ [ADR-0001](../2-architecture/adr/0001-cpp-console.md) (CMake), [ADR-0002](../2-architecture/adr/0002-money-in-kopecks.md) (найдорожче — гроші в копійках), [ADR-0003](../2-architecture/adr/0003-text-file-storage.md) |
+| ADR | контекст, варіанти, рішення, наслідки | є відкинуті варіанти | ✅ [ADR-0001](../2-architecture/adr/0001-cpp-console.md) (CMake), [ADR-0002](../2-architecture/adr/0002-money-in-cents.md) (найдорожче — гроші в центах), [ADR-0003](../2-architecture/adr/0003-text-file-storage.md) |
 | `.github/pull_request_template.md` | «Навіщо», «Як перевірити», «Що не входить» | три пункти | ✅ |
 
 ADR лежать у `2-architecture/adr/` — так само, як у решті документів курсу, а не в `docs/adr/`.

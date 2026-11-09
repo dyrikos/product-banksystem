@@ -17,7 +17,7 @@ erDiagram
     ACCOUNT {
         string number PK "UA + цифри"
         string pin "4 цифри"
-        int64 balance "копійки"
+        int64 balance "центи"
         string owner FK
     }
     OPERATION {
@@ -57,7 +57,7 @@ erDiagram
 |---|---|---|---|---|
 | `number` | `std::string` | так | `UA1223456789` | `UA` + цифри; унікальний |
 | `pin` | `std::string` | так | `0123` | рівно 4 цифри; рядок, не число |
-| `balance` | `Money` (`int64_t`, копійки) | так | `550050` = 5500.50 | 0 … 99 999 999 999 |
+| `balance` | `Money` (`int64_t`, центи) | так | `550050` = 5500.50 | 0 … 99 999 999 999 |
 | `owner` | `std::string` | так | `Yra Kampov` | 2–50 символів, без `;` і переносів рядка |
 
 Нові рахунки отримують номер `UA` + 10 цифр (`UA0000000004`) — перший вільний, починаючи з кількості рахунків + 1.
@@ -68,7 +68,7 @@ erDiagram
 CREATE TABLE accounts (
   number  TEXT PRIMARY KEY,                       -- UA + цифри
   pin     TEXT NOT NULL CHECK (length(pin) = 4 AND pin NOT GLOB '*[^0-9]*'),
-  balance INTEGER NOT NULL CHECK (balance BETWEEN 0 AND 99999999999),  -- копійки
+  balance INTEGER NOT NULL CHECK (balance BETWEEN 0 AND 99999999999),  -- центи
   owner   TEXT NOT NULL
 );
 PRAGMA user_version = 1;  -- версія схеми
