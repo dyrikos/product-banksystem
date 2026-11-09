@@ -8,7 +8,7 @@
 
 | Тип | Опис |
 |---|---|
-| `Money` | `std::int64_t`, **копійки**: 5500.50 → `550050`. Межа балансу — `kMaxAmount` = 99 999 999 999 (999 999 999.99) ([ADR-0002](adr/0002-money-in-kopecks.md)) |
+| `Money` | `std::int64_t`, **центи**: 5500.50 → `550050`. Межа балансу — `kMaxAmount` = 99 999 999 999 (999 999 999.99) ([ADR-0002](adr/0002-money-in-cents.md)) |
 | `Account` | `owner` (2–50 символів), `number` (`UA` + цифри), `pin` (рядок рівно з 4 цифр), `balance` (`Money`) |
 | `Result` | `Ok`, `InvalidAmount`, `InsufficientFunds`, `SameAccount`, `NotFound` |
 
@@ -18,7 +18,7 @@
 |---|---|---|---|---|
 | 1 | `authenticate(number, pin)` | номер рахунку, PIN рядком | `Account*` | `nullptr` — немає такого номера або PIN не збігся **точно** |
 | 2 | `find(number)` | номер рахунку | `Account*` | `nullptr` — немає такого номера |
-| 3 | `deposit(account, amount)` | рахунок, сума в копійках | `Ok` | `InvalidAmount` — сума ≤ 0 або баланс перевищить `kMaxAmount` |
+| 3 | `deposit(account, amount)` | рахунок, сума в центах | `Ok` | `InvalidAmount` — сума ≤ 0 або баланс перевищить `kMaxAmount` |
 | 4 | `withdraw(account, amount)` | рахунок, сума | `Ok` | `InvalidAmount` — сума ≤ 0; `InsufficientFunds` — сума > балансу |
 | 5 | `transfer(from, to_number, amount)` | рахунок відправника, номер отримувача, сума | `Ok` | перевіряються **по черзі**: `SameAccount` → `NotFound` → `InvalidAmount` → `InsufficientFunds` |
 | 6 | `open_account(owner, pin)` | імʼя, PIN | номер нового рахунку, баланс 0 | `nullopt` — імʼя або PIN некоректні |

@@ -47,7 +47,7 @@ test_bank.cpp:81: CHECK failed: b.withdraw(*acc, m("0.20")) == Result::Ok
 10 passed, 3 failed
 ```
 
-Після правок (копійки, PIN-рядок, строгий розбір) — усі зелені.
+Після правок (центи, PIN-рядок, строгий розбір) — усі зелені.
 
 **Перевірка на самому оригіналі.** Щоб переконатися, що дефекти не внесено при перенесенні, `legacy/12main.cpp` зібрано без змін:
 
@@ -83,7 +83,7 @@ test_storage.cpp:115: CHECK failed: magic == "SQLite format 3"
 | TC-33 переказ на невідомий | `Error: Target account not found.` — суму не питає |
 | TC-34 новий рахунок | `Account opened! Your account number: UA0000000004`, `Hello, Olena Ko!` |
 | TC-35 3 спроби | `Access denied … Attempts left: 2 / 1 / 0`, `Too many failed attempts. Goodbye!` |
-| TC-36 копійки | `Remaining balance: $0.20`, потім `$0.00` |
+| TC-36 центи | `Remaining balance: $0.20`, потім `$0.00` |
 | TC-37 пошкоджене сховище | `Error: cannot read saved data: bad.db: file is not a database`, код 1, файл не змінено (однаковий MD5 до й після) |
 
 ## 4. Відкриті дефекти й обмеження

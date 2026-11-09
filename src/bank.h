@@ -12,7 +12,7 @@ struct Account {
     std::string owner;
     std::string number;  // «UA» + цифри
     std::string pin;     // рівно 4 цифри; рядок, щоб «0123» не ставало 123
-    Money balance;       // копійки
+    Money balance;       // центи
 };
 
 enum class Result { Ok, InvalidAmount, InsufficientFunds, SameAccount, NotFound };
