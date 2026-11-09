@@ -1,0 +1,15 @@
+# Збірка
+build/
+cmake-build-*/
+*.exe
+*.o
+*.obj
+
+# Дані клієнтів — не в git (PIN зберігаються відкрито)
+data/
+*.tmp
+test_accounts.txt
+
+# IDE
+.vscode/
+.idea/
