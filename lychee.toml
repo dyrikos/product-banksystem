@@ -1,0 +1,9 @@
+# Налаштування перевірки посилань (lychee) для .github/workflows/docs.yml
+
+exclude_path = ["build", "legacy"]
+
+# 429 — сайт обмежив частоту запитів робота; це не бите посилання
+accept = ["200..=299", "429"]
+
+max_retries = 3
+timeout = 20
