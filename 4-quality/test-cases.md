@@ -1,6 +1,6 @@
 # Тест-кейси
 
-TC-01…TC-29, TC-38, TC-39 — автотести (`ctest`), статус за прогоном 09.11.2026. TC-30…TC-37 — наскрізні сценарії: ввід подається в `build/bank <тимчасове сховище>` через `stdin`. Тип: **+** позитивний, **−** негативний, **М** межове значення.
+TC-01…TC-29, TC-38…TC-41 — автотести (`ctest`), статус за прогоном 09.11.2026. TC-30…TC-37 — наскрізні сценарії: ввід подається в `build/bank <тимчасове сховище>` через `stdin`. Тип: **+** позитивний, **−** негативний, **М** межове значення.
 
 ## Модуль `money` (`tests/test_money.cpp`)
 
@@ -42,9 +42,11 @@ TC-01…TC-29, TC-38, TC-39 — автотести (`ctest`), статус за 
 | TC-24 | FR-06 | + | прочитати, коли сховища немає | «перший запуск», без помилки | `missing_storage_means_first_run` | ✅ |
 | TC-25 | FR-06 | М | зберегти 0 рахунків | прочитано порожній список | `storage_without_accounts_is_valid` | ✅ (TDD, було 🔴) |
 | TC-26 | NFR-2 | + | зберегти двічі | лишився другий стан | `second_save_replaces_first` | ✅ (TDD, було 🔴) |
-| TC-27 | NFR-2 | − | баланс `abc` у 3-му рядку | помилка з «line 3» | `corrupted_balance_is_reported_with_line` | ✅ (TDD, було 🔴) |
-| TC-28 | NFR-2 | − | PIN `12a4` у сховищі | помилка | `corrupted_pin_is_reported` | ✅ (TDD, було 🔴) |
-| TC-29 | NFR-2 | − | два рахунки з одним номером | помилка | `duplicate_account_number_is_reported` | ✅ (TDD, було 🔴) |
+| TC-27 | NFR-2 | − | у таблиці рахунок `UA2` з балансом `'abc'` | помилка з номером `UA2` | `corrupted_balance_is_reported_with_account` | ✅ (SQLite: було 🔴) |
+| TC-28 | NFR-2 | − | PIN `12a4` у таблиці | помилка «PIN must be 4 digits» | `corrupted_pin_is_reported` | ✅ (SQLite: було 🔴) |
+| TC-29 | NFR-2 | − | зберегти два рахунки з одним номером поверх старих даних | `false`, лишились старі дані | `failed_save_keeps_previous_data` | ✅ (SQLite: було 🔴) |
+| TC-40 | NFR-2 | − | на місці бази — текстовий файл | помилка «file is not a database» | `not_a_database_is_reported` | ✅ (SQLite: було 🔴) |
+| TC-41 | FR-06 | + | зберегти рахунок | файл починається з `SQLite format 3` | `storage_is_sqlite_database` | ✅ (SQLite: було 🔴) |
 
 ## Додано після ревʼю (BUG-08)
 
@@ -64,6 +66,6 @@ TC-01…TC-29, TC-38, TC-39 — автотести (`ctest`), статус за 
 | TC-34 | FR-07 | відкрити «Olena Ko»/`0042`, увійти | номер `UA0000000004`, «Hello, Olena Ko!», 0.00 | ✅ |
 | TC-35 | FR-01, FR-08 | PIN `1234x`, `123`, `0000` | 3 × «Access denied», «Too many failed attempts» | ✅ |
 | TC-36 | NFR-1 | поповнити 0.30, зняти 0.10, зняти 0.20 | обидва зняття успішні, баланс 0.00 | ✅ |
-| TC-37 | NFR-2 | дописати в сховище рядок `UA1;12a4;100;Bad`, запустити | «cannot read saved data: …, line 6: PIN must be 4 digits», код 1, сховище не змінене | ✅ |
+| TC-37 | NFR-2 | записати на місце бази текст `garbage`, запустити | «cannot read saved data: …: file is not a database», код 1, файл не змінено | ✅ |
 
-**Разом:** 39 кейсів (31 автотест + 8 наскрізних), з них 24 негативні або межові.
+**Разом:** 41 кейс (33 автотести + 8 наскрізних), з них 25 негативних або межових.

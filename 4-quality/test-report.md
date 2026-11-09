@@ -13,14 +13,14 @@
 |---|---|---|---|
 | `money` | 6 | 6 | 0 |
 | `bank` | 18 | 18 | 0 |
-| `storage` | 7 | 7 | 0 |
+| `storage` | 9 | 9 | 0 |
 | Наскрізні сценарії | 8 | 8 | 0 |
 | Попередження компілятора (`-Wall -Wextra -Wpedantic`) | — | 0 | — |
 
 ```text
 1: 6 passed, 0 failed
 2: 18 passed, 0 failed
-3: 7 passed, 0 failed
+3: 9 passed, 0 failed
 100% tests passed out of 3
 ```
 
@@ -55,7 +55,23 @@ test_bank.cpp:81: CHECK failed: b.withdraw(*acc, m("0.20")) == Result::Ok
 - закритий ввід посеред суми → за 3 с програма надрукувала **97 МБ** рядків «Invalid input…» і була зупинена таймаутом (BUG-04);
 - поповнення `1e3` → `New balance: $6500.50`, потім `1e20` → `New balance: $100000000000000000000.00` — 6500.50 зникли (BUG-08). Тести TC-38 і TC-39 дописано після статичного ревʼю: на перенесеному коді вони вже зелені, червоний стан видно лише на оригіналі.
 
-**Сховище — через TDD.** Тести `test_storage.cpp` написано до реалізації, проти заглушки: `1 passed, 6 failed` (пройшов лише «сховища немає» — заглушка й так нічого не знаходить). Після реалізації — 7 з 7.
+**Сховище — через TDD, двічі.** Спершу текстовий файл: тести написано проти заглушки — `1 passed, 6 failed`, після реалізації 7 з 7. Потім перехід на SQLite ([ADR-0004](../2-architecture/adr/0004-sqlite-storage.md)): нові тести запущено на **старій** текстовій реалізації:
+
+```text
+test_storage.cpp:79: CHECK failed: error.find("UA2") != std::string::npos
+[FAIL] corrupted_balance_is_reported_with_account
+test_storage.cpp:86: CHECK failed: error.find("PIN") != std::string::npos
+[FAIL] corrupted_pin_is_reported
+test_storage.cpp:93: CHECK failed: !save_accounts(kPath, {… два рахунки UA7 …})
+[FAIL] failed_save_keeps_previous_data
+test_storage.cpp:106: CHECK failed: error.find("not a database") != std::string::npos
+[FAIL] not_a_database_is_reported
+test_storage.cpp:115: CHECK failed: magic == "SQLite format 3"
+[FAIL] storage_is_sqlite_database
+4 passed, 5 failed
+```
+
+Після реалізації на SQLite — 9 з 9; тести `money` і `bank` не змінювались і лишились зеленими: контракт `storage` той самий.
 
 ## 3. Наскрізні сценарії
 
@@ -68,7 +84,7 @@ test_bank.cpp:81: CHECK failed: b.withdraw(*acc, m("0.20")) == Result::Ok
 | TC-34 новий рахунок | `Account opened! Your account number: UA0000000004`, `Hello, Olena Ko!` |
 | TC-35 3 спроби | `Access denied … Attempts left: 2 / 1 / 0`, `Too many failed attempts. Goodbye!` |
 | TC-36 копійки | `Remaining balance: $0.20`, потім `$0.00` |
-| TC-37 пошкоджене сховище | `Error: cannot read saved data: …, line 6: PIN must be 4 digits`, код 1, рядок у файлі лишився |
+| TC-37 пошкоджене сховище | `Error: cannot read saved data: bad.db: file is not a database`, код 1, файл не змінено (однаковий MD5 до й після) |
 
 ## 4. Відкриті дефекти й обмеження
 

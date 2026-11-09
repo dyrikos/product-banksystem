@@ -19,7 +19,7 @@ sequenceDiagram
     participant storage
     participant bank
     participant money
-    cli->>storage: load_accounts(data/accounts.txt)
+    cli->>storage: load_accounts(data/accounts.db)
     storage-->>cli: рахунки (або «немає» / «пошкоджене»)
     C->>cli: номер, PIN
     cli->>bank: authenticate(номер, pin)
@@ -30,7 +30,7 @@ sequenceDiagram
     cli->>bank: deposit(рахунок, 10010)
     bank-->>cli: Ok
     cli->>storage: save_accounts(рахунки)
-    storage-->>cli: true (запис через .tmp)
+    storage-->>cli: true (одна транзакція SQLite)
     cli-->>C: New balance: $5600.60
 ```
 

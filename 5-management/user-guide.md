@@ -8,7 +8,7 @@ BankSystem — навчальна консольна банківська сис
 
 Windows: двічі клацнути `bank.exe` або в терміналі `build\bank.exe`. Linux/macOS: `build/bank`. Як зібрати — у [README](../README.md).
 
-Під час першого запуску програма напише `No saved data found. Created data/accounts.txt with demo accounts.` — створено три демо-рахунки:
+Під час першого запуску програма напише `No saved data found. Created data/accounts.db with demo accounts.` — створено три демо-рахунки:
 
 | Номер | PIN |
 |---|---|
@@ -49,4 +49,4 @@ Windows: двічі клацнути `bank.exe` або в терміналі `bu
 | `Error: Target account not found.` | рахунку отримувача немає | перевірити номер |
 | `Error: You cannot transfer funds to your own account.` | номер отримувача — ваш | ввести номер іншого рахунку |
 | `Warning: could not save data…` | зміну не вдалося записати | див. [runbook](runbook.md) |
-| `Error: cannot read saved data: …, line N: …` | сховище пошкоджене | див. [runbook](runbook.md) |
+| `Error: cannot read saved data: …` | сховище пошкоджене | див. [runbook](runbook.md) |

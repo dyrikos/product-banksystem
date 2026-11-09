@@ -4,7 +4,7 @@
 - **Проблема й для кого:** студенти бачать банк лише ззовні; тут — маленька чесна модель рахунків, переказів і PIN, яку можна прочитати й протестувати за вечір ([vision](0-product/vision.md)).
 - **Команда:** Юра Кампов, спеціальність F2 «Інженерія програмного забезпечення» — працює сам.
 - **Прототип:** робоча програма, знімки ключових екранів — [prototype](2-architecture/prototype/README.md).
-- **Стан:** v0.2.0 — модулі, збереження даних між запусками, 31 модульний тест, CI ([CHANGELOG](CHANGELOG.md)).
+- **Стан:** v0.2.0 — модулі, збереження даних між запусками, база SQLite, 33 модульні тести, CI ([CHANGELOG](CHANGELOG.md)).
 - **Запуск за хвилину:** `cmake -S . -B build && cmake --build build`, далі `build/bank` (Windows: `build\bank.exe`) — увійти як `UA1223456789`, PIN `1234`.
 - **Важливо:** це навчальний проєкт, не для справжніх грошей — PIN зберігаються відкрито ([privacy](5-management/privacy.md)).
 - **Як працювати в проєкті:** [CONTRIBUTING.md](CONTRIBUTING.md) · обслуговування — [runbook](5-management/runbook.md).
@@ -42,11 +42,11 @@ ctest --test-dir build --output-on-failure
 Запуск:
 
 ```bash
-build/bank                          # дані — у data/accounts.txt
-build/bank path/to/accounts.txt     # інше місце для даних
+build/bank                          # дані — у базі data/accounts.db
+build/bank path/to/accounts.db      # інше місце для даних
 ```
 
-Під час першого запуску програма створює `data/accounts.txt` із трьома демо-рахунками:
+Під час першого запуску програма створює базу SQLite `data/accounts.db` із трьома демо-рахунками:
 
 | Номер | PIN | Власник | Баланс |
 |---|---|---|---|
@@ -62,16 +62,17 @@ build/bank path/to/accounts.txt     # інше місце для даних
 |---|---|---|
 | `money` | `src/money.h/.cpp` | гроші в копійках: розбір «12.34» і виведення |
 | `bank` | `src/bank.h/.cpp` | вхід, поповнення, зняття, переказ, відкриття рахунку — без вводу-виводу |
-| `storage` | `src/storage.h/.cpp` | збереження рахунків між запусками |
+| `storage` | `src/storage.h/.cpp` | збереження рахунків між запусками в базі SQLite |
+| SQLite | `third_party/sqlite/` | вбудована база даних 3.50.4 — нічого не треба встановлювати ([ADR-0004](2-architecture/adr/0004-sqlite-storage.md)) |
 | `cli` | `src/main.cpp` | меню й діалог з користувачем |
-| тести | `tests/` | 31 модульний тест, без сторонніх бібліотек |
+| тести | `tests/` | 33 модульні тести, власний `check.h` без фреймворків |
 | оригінал | `legacy/12main.cpp` | перша версія в одному файлі — для порівняння, не збирається |
 
 Контракт модулів — [modules.md](2-architecture/modules.md).
 
 ## Як викласти на GitHub (GitHub Desktop)
 
-Історія git уже є: гілка `main` (v0.1.0 → v0.2.0) і гілка `docs/currency-dollars` для першого pull request.
+Історія git уже є: гілка `main` (v0.1.0 → v0.2.0 → сховище SQLite) і гілка `docs/currency-dollars` для першого pull request.
 
 1. Розпакувати архів. Тека `BankSystem` містить приховану теку `.git` — її не видаляти.
 2. GitHub Desktop → **File → Add local repository** → обрати теку `BankSystem`.

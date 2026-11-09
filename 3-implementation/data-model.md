@@ -35,21 +35,21 @@ erDiagram
         int attempts_left "3 → 0"
     }
     STORAGE {
-        string path "data/accounts.txt"
-        string header "# BankSystem accounts v1"
+        string path "data/accounts.db"
+        int user_version "1 — версія схеми"
     }
 ```
 
 | Сутність | Де живе | Стан |
 |---|---|---|
 | Клієнт | поле `owner` у рахунку | ✅ v0.2 |
-| Рахунок | `data/accounts.txt` і памʼять | ✅ v0.2 |
+| Рахунок | таблиця `accounts` у `data/accounts.db` і памʼять | ✅ v0.2 |
 | Сесія | лише памʼять `cli` (номер рахунку, спроби входу) | ✅ v0.2 |
-| Сховище | файл із заголовком версії формату | ✅ v0.2 |
-| Операція | — | план v0.3 (FR-09) |
+| Сховище | база SQLite з версією схеми `user_version` | ✅ v0.2 |
+| Операція | таблиця `operations` | план v0.3 (FR-09) |
 | Блокування входу | — | план v0.3 (FR-10) |
 
-Зовнішніх сервісів і бази даних немає: усе в одному текстовому файлі ([ADR-0003](../2-architecture/adr/0003-text-file-storage.md)).
+База даних — **SQLite 3.50.4**, вбудована в програму: окремого сервера немає, усе в одному файлі `data/accounts.db` ([ADR-0004](../2-architecture/adr/0004-sqlite-storage.md)). Зовнішніх сервісів немає.
 
 ## Сутність «Рахунок»
 
@@ -62,19 +62,30 @@ erDiagram
 
 Нові рахунки отримують номер `UA` + 10 цифр (`UA0000000004`) — перший вільний, починаючи з кількості рахунків + 1.
 
-## Формат сховища `data/accounts.txt`
+## Схема бази `data/accounts.db`
 
-```text
-# BankSystem accounts v1
-UA1223456789;1234;550050;Yra Kampov
-UA987654321;5678;120000;Polina Katruch
-UA1122334455;1111;340000;Ivanka Katruch
+```sql
+CREATE TABLE accounts (
+  number  TEXT PRIMARY KEY,                       -- UA + цифри
+  pin     TEXT NOT NULL CHECK (length(pin) = 4 AND pin NOT GLOB '*[^0-9]*'),
+  balance INTEGER NOT NULL CHECK (balance BETWEEN 0 AND 99999999999),  -- копійки
+  owner   TEXT NOT NULL
+);
+PRAGMA user_version = 1;  -- версія схеми
 ```
 
-- Рядки, що починаються з `#`, і порожні рядки пропускаються.
-- Поля через `;` у порядку **номер; PIN; баланс у копійках; імʼя**. Імʼя останнє — може містити пробіли.
-- Кодування — UTF-8; закінчення рядків `\n` (файл, збережений у Windows із `\r\n`, теж читається).
-- Запис: спершу `accounts.txt.tmp`, потім заміна основного файлу ([ADR-0003](../2-architecture/adr/0003-text-file-storage.md)).
+Демо-дані після першого запуску:
+
+| number | pin | balance | owner |
+|---|---|---|---|
+| UA1223456789 | 1234 | 550050 | Yra Kampov |
+| UA987654321 | 5678 | 120000 | Polina Katruch |
+| UA1122334455 | 1111 | 340000 | Ivanka Katruch |
+
+- **Запис:** одна транзакція — `BEGIN IMMEDIATE`, `DELETE`, `INSERT` кожного рахунку, `COMMIT`. Помилка → `ROLLBACK`, старі дані лишаються.
+- **Читання:** база відкривається лише для читання; кожен рядок перевіряється ще раз у коді, бо базу могли змінити стороннім інструментом.
+- **Перший запуск:** якщо файлу немає, читання його **не створює** — `cli` створює базу з демо-рахунками.
+- **Як подивитись:** DB Browser for SQLite або `sqlite3 data/accounts.db "SELECT * FROM accounts;"`.
 
 ## Що лишається в памʼяті
 
@@ -84,5 +95,5 @@ UA1122334455;1111;340000;Ivanka Katruch
 
 | Дані | Де | Хто має доступ |
 |---|---|---|
-| Рахунки, PIN, баланси | `data/accounts.txt` на компʼютері, де запущено програму | будь-хто з доступом до цієї теки — PIN відкритим текстом ([privacy](../5-management/privacy.md)) |
+| Рахунки, PIN, баланси | `data/accounts.db` на компʼютері, де запущено програму | будь-хто з доступом до цієї теки — PIN відкритим текстом ([privacy](../5-management/privacy.md)) |
 | Те саме в git | **ніде**: `data/` у `.gitignore` | — |

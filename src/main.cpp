@@ -234,6 +234,6 @@ private:
 }  // namespace
 
 int main(int argc, char* argv[]) {
-    // Шлях до сховища можна передати аргументом; за замовчуванням — data/accounts.txt
-    return App(argc > 1 ? argv[1] : "data/accounts.txt").run();
+    // Шлях до сховища можна передати аргументом; за замовчуванням — data/accounts.db
+    return App(argc > 1 ? argv[1] : "data/accounts.db").run();
 }
